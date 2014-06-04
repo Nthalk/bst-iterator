@@ -2,13 +2,6 @@ package com.nthalk.util
 
 class BST[T](compare: (T, T) => Int) extends Iterable[T] {
 
-  sealed abstract class OrderOutcome(verifier: Int => Boolean) {
-    def unapply(i: Int) = verifier(i)
-  }
-  case object AGTB extends OrderOutcome(_ > 0)
-  case object ALTB extends OrderOutcome(_ < 0)
-  case object AEQB extends OrderOutcome(_ == 0)
-
   case class Node[T](el: T, var parent: Option[Node[T]], var left: Option[Node[T]] = None, var right: Option[Node[T]] = None)
 
   var root: Option[Node[T]] = None
@@ -59,7 +52,7 @@ class BST[T](compare: (T, T) => Int) extends Iterable[T] {
         //    B
         //  A   D
         //     C
-        
+
         // Move to D then down to C
         current = decendLeft(node.right.get)
       } else if (node.parent.isDefined) {
@@ -97,21 +90,21 @@ class BST[T](compare: (T, T) => Int) extends Iterable[T] {
   }
 
   def add(el: T, node: Node[T]): Unit = {
-    compare(el, node.el) match {
-      case AGTB() =>
-        if (node.right.isDefined) {
-          add(el, node.right.get)
-        } else {
-          node.right = Some(Node(el, Some(node)))
-        }
-      case AEQB() =>
+    val i = compare(el, node.el)
+    if (i > 0) {
+      if (node.right.isDefined) {
+        add(el, node.right.get)
+      } else {
+        node.right = Some(Node(el, Some(node)))
+      }
+    } else if (i < 0) {
+      if (node.left.isDefined) {
+        add(el, node.left.get)
+      } else {
+        node.left = Some(Node(el, Some(node)))
+      }
+    } else {
       // Do nothing, duplicate node
-      case ALTB() =>
-        if (node.left.isDefined) {
-          add(el, node.left.get)
-        } else {
-          node.left = Some(Node(el, Some(node)))
-        }
     }
   }
 }
