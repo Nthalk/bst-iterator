@@ -64,19 +64,19 @@ class BST[T](compare: (T, T) => Int) extends Iterable[T] {
         } else if (node.parent.isDefined) {
           // We have a parent
           if (current == node.parent.get.right) {
-            // We are the right leg, crawl up it
+            // Crawl up the right leg
             //   Current(A), Next(D)
             //      D
             //     C
             //      B
             //       A
 
-            // Crawl up to D
+            // Crawl up to C
             while (current.get.parent.isDefined && current == current.get.parent.get.right) {
               current = current.get.parent
             }
 
-            // Then crawl to parent (D)
+            // Then crawl to parent D
             current = current.get.parent
           } else {
             // Crawl up the left leg
