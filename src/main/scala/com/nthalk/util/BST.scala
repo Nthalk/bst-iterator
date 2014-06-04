@@ -71,7 +71,7 @@ class BST[T](compare: (T, T) => Int) extends Iterable[T] {
             //      B
             //       A
 
-            // Crawl up to C
+            // Crawl up to D
             while (current.get.parent.isDefined && current == current.get.parent.get.right) {
               current = current.get.parent
             }
