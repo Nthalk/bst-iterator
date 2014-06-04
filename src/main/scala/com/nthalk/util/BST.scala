@@ -52,44 +52,44 @@ class BST[T](compare: (T, T) => Int) extends Iterable[T] {
       val ret = current.get.el
 
       // We have already decended left
-      if (current.isDefined) {
-        val node = current.get
-        if (node.right.isDefined) {
-          val right = node.right.get
-          // We have a right
-          // Current(B), Next(C)
+      val node = current.get
+      if (node.right.isDefined) {
+        // We have a right
+        // Current(B), Next(C)
+        //    B
+        //  A   D
+        //     C
+        
+        // Move to D then down to C
+        current = decendLeft(node.right.get)
+      } else if (node.parent.isDefined) {
+        // We have a parent
+        if (current == node.parent.get.right) {
+          // We are the right leg, crawl up it
+          //   Current(A), Next(D)
+          //      D
+          //     C
+          //      B
+          //       A
+
+          // Crawl up to C
+          while (current.get.parent.isDefined && current == current.get.parent.get.right) {
+            current = current.get.parent
+          }
+
+          // Then crawl to parent D
+          current = current.get.parent
+        } else {
+          // Crawl up the left leg
+          //  Current(A), Next(B)
           //   B
           //  A C
-          current = decendLeft(right)
-        } else if (node.parent.isDefined) {
-          // We have a parent
-          if (current == node.parent.get.right) {
-            // We are the right leg, crawl up it
-            //   Current(A), Next(D)
-            //      D
-            //     C
-            //      B
-            //       A
-
-            // Crawl up to C
-            while (current.get.parent.isDefined && current == current.get.parent.get.right) {
-              current = current.get.parent
-            }
-
-            // Then crawl to parent (D)
-            current = current.get.parent
-          } else {
-            // Crawl up the left leg
-            //  Current(A), Next(B)
-            //   B
-            //  A C
-            current = node.parent
-          }
-        } else {
-          // We could not descend right or move up
-          // We must be done
-          current = None
+          current = node.parent
         }
+      } else {
+        // We could not descend right or move up
+        // We must be done
+        current = None
       }
       ret
     }
